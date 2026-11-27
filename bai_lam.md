@@ -1,4 +1,4 @@
-﻿# BÀI LÀM – ĐÁNH GIÁ NĂNG LỰC FRONTEND (K24)
+# BÀI LÀM – ĐÁNH GIÁ NĂNG LỰC FRONTEND (K24)
 
 - **Mã đề:** 01
 - **Họ tên:** Nguyễn Văn Kiên
