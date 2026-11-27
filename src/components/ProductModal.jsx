@@ -1,3 +1,16 @@
+// ==============================================================================
+// PHA 1 - MỤC 4.2.2 & 4.2.3 & 4.2.4: FORM THÊM VÀ SỬA SẢN PHẨM QUA API
+// ==============================================================================
+// Tệp: src/components/ProductModal.jsx
+// Chức năng thực hiện trong Pha 1:
+//   - [4.2.2] Form thêm sản phẩm: Popup modal với các trường Tên, SKU, Danh mục,
+//             Giá, Tồn kho, Trạng thái; nút Huỷ và nút Lưu.
+//   - [4.2.3] Gửi form: Validate dữ liệu (tên 3-100 ký tự, SKU chuẩn ABC-1234,
+//             giá > 0, tồn kho >= 0), xử lý và hiển thị lỗi từ API trả về.
+//   - [4.2.4] Sửa sản phẩm: Điền sẵn dữ liệu cũ khi có initialData, đổi tiêu đề
+//             thành "Sửa sản phẩm" và nút bấm "Lưu thay đổi".
+// ==============================================================================
+
 import { useEffect, useState } from 'react';
 import { categoryNames } from '../data/sample.js';
 

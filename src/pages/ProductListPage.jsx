@@ -1,5 +1,19 @@
-// Trang danh sách sản phẩm OfficeMart Admin
-// Hỗ trợ tìm kiếm, lọc, phân trang và đồng bộ 2 chiều với URL (Mục 4.3.1, 4.3.2, 4.3.3)
+// ==============================================================================
+// TRANG QUẢN LÝ SẢN PHẨM: src/pages/ProductListPage.jsx
+// ==============================================================================
+// CÁC CHỨC NĂNG THỰC HIỆN TRONG PHA 1:
+//   - [4.1.1] Bố cục trang: Tiêu đề "Sản phẩm", nút "Thêm sản phẩm" ở góc phải.
+//   - [4.2.1] Tải danh sách: Gọi API tải sản phẩm, quản lý loading & error banner.
+//   - [4.2.3] Thêm sản phẩm: Gọi POST /api/products, làm mới dữ liệu sau khi thêm.
+//   - [4.2.4] Sửa sản phẩm: Mở modal với dữ liệu điền sẵn, gọi PUT /api/products/:id.
+//   - [4.2.5] Xoá sản phẩm: Hộp thoại xác nhận window.confirm, gọi DELETE /api/products/:id.
+//
+// CÁC CHỨC NĂNG BỔ SUNG TRONG PHA 2:
+//   - [4.3.1] Thanh tìm kiếm theo từ khoá (q), lọc theo danh mục và trạng thái.
+//   - [4.3.2] Thanh phân trang (Trang trước, số trang, trang sau, đếm tổng số).
+//   - [4.3.3] Đồng bộ 2 chiều với URL Search Parameters qua useSearchParams.
+// ==============================================================================
+
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../api/axiosClient.js';
@@ -47,7 +61,7 @@ export default function ProductListPage() {
     setSearchParams(next, { replace: true });
   }
 
-  // Gọi custom hook tải danh sách sản phẩm với tham số đã đồng bộ từ URL
+  // Gọi custom hook tải danh sách sản phẩm với tham số đã đồng bộ từ URL (Pha 1: 4.2.1, Pha 2: 4.3.4 c)
   const { data: products, total, loading, error, refetch } = useProductSearch({
     q: queryFromUrl,
     category: categoryFromUrl,
@@ -66,11 +80,11 @@ export default function ProductListPage() {
     }
   }, [total, currentPage, totalPages]);
 
-  // State quản lý Modal thêm / sửa
+  // State quản lý Modal thêm / sửa (Mục 4.2.2 & 4.2.4)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
 
-  // Debounce đẩy từ khóa lên URL sau 350ms khi người dùng ngừng gõ
+  // Debounce đẩy từ khóa lên URL sau 350ms khi người dùng ngừng gõ (Mục 4.3.1)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput.trim() !== queryFromUrl) {
@@ -109,16 +123,19 @@ export default function ProductListPage() {
     }
   }
 
+  // [Pha 1 - 4.2.2] Mở modal form thêm sản phẩm
   function handleOpenCreate() {
     setEditingProduct(null);
     setIsModalOpen(true);
   }
 
+  // [Pha 1 - 4.2.4] Mở modal form sửa sản phẩm
   function handleOpenEdit(product) {
     setEditingProduct(product);
     setIsModalOpen(true);
   }
 
+  // [Pha 1 - 4.2.5] Xoá sản phẩm qua API
   async function handleDelete(product) {
     const confirmed = window.confirm(
       `Bạn có chắc chắn muốn xoá sản phẩm "${product.name}"?`,
@@ -133,6 +150,7 @@ export default function ProductListPage() {
     }
   }
 
+  // [Pha 1 - 4.2.3 & 4.2.4] Submit form thêm hoặc sửa sản phẩm
   async function handleModalSubmit(payload) {
     if (editingProduct) {
       await api.put(`/products/${editingProduct.id}`, payload);
@@ -156,6 +174,7 @@ export default function ProductListPage() {
 
   return (
     <section className="page-container">
+      {/* [Pha 1 - 4.1.1] Tiêu đề trang và nút Thêm sản phẩm */}
       <div className="page-header">
         <h1 className="page-title">Sản phẩm</h1>
         <button
@@ -167,7 +186,7 @@ export default function ProductListPage() {
         </button>
       </div>
 
-      {/* Thanh tìm kiếm và bộ lọc (Mục 4.3.1 & 4.3.3) */}
+      {/* [Pha 2 - 4.3.1 & 4.3.3] Thanh tìm kiếm và bộ lọc */}
       <div className="filter-card">
         <div className="filter-group filter-search">
           <input
@@ -217,12 +236,14 @@ export default function ProductListPage() {
         )}
       </div>
 
+      {/* [Pha 1 - 4.2.1] Thông báo trạng thái đang tải */}
       {loading && (
         <div className="state-banner state-loading">
           Đang tải dữ liệu sản phẩm...
         </div>
       )}
 
+      {/* [Pha 1 - 4.2.1] Thông báo lỗi tải dữ liệu */}
       {error && (
         <div className="state-banner state-error">
           <span>{error}</span>
@@ -232,14 +253,14 @@ export default function ProductListPage() {
         </div>
       )}
 
-      {/* Bảng hiển thị danh sách sản phẩm */}
+      {/* [Pha 1 - 4.1.2] Bảng hiển thị danh sách sản phẩm */}
       <ProductTable
         products={products}
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
 
-      {/* Thanh phân trang (Mục 4.3.2 & 4.3.3) */}
+      {/* [Pha 2 - 4.3.2] Thanh điều hướng phân trang */}
       <div className="pagination-bar">
         <div className="pagination-info">
           Hiển thị <strong>{startItem}</strong> - <strong>{endItem}</strong> trên tổng số <strong>{total}</strong> sản phẩm
@@ -277,7 +298,7 @@ export default function ProductListPage() {
         </div>
       </div>
 
-      {/* Modal form thêm / sửa */}
+      {/* [Pha 1 - 4.2.2 & 4.2.4] Modal form thêm / sửa */}
       <ProductModal
         isOpen={isModalOpen}
         initialData={editingProduct}

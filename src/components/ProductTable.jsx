@@ -1,3 +1,19 @@
+// ==============================================================================
+// PHA 1 - MỤC 4.1.2, 4.1.3, 4.1.4: BẢNG SẢN PHẨM & HIỂN THỊ DỮ LIỆU
+// ==============================================================================
+// Tệp: src/components/ProductTable.jsx
+// Chức năng thực hiện trong Pha 1:
+//   - [4.1.2] Bảng sản phẩm: Hiển thị 7 cột (Tên, SKU, Danh mục, Giá, Tồn kho,
+//             Trạng thái, Thao tác). Mỗi hàng có data-testid="product-row".
+//   - [4.1.3] Định dạng dữ liệu:
+//             + Giá: hiển thị tiền tệ VND có ký hiệu ₫ (formatPrice).
+//             + Tồn kho = 0: hiển thị chữ màu đỏ "Hết hàng" (.cell-stock-empty).
+//             + Trạng thái: badge màu xanh "Đang bán" hoặc xám "Ngừng bán" (data-testid="product-status").
+//             + Danh mục: ánh xạ từ ID sang tiếng Việt qua categoryNames.
+//   - [4.1.4] Hiển thị mobile: Gắn data-label ở từng ô <td> để CSS mobile hiển thị nhãn cột.
+//   - [4.2.4 & 4.2.5] Kết nối các nút "Sửa" (onEdit) và "Xoá" (onDelete).
+// ==============================================================================
+
 import { categoryNames } from '../data/sample.js';
 import { formatPrice } from '../utils/format.js';
 

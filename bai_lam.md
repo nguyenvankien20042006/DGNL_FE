@@ -94,3 +94,4 @@ Các trường hợp biên đã xử lý:
 4. Xoá sản phẩm cuối cùng của trang: Tự động tải lại và nếu trang bị trống sẽ lùi về trang trước đó.
 5. Xử lý lỗi server / timeout: Hiển thị banner thông báo lỗi thân thiện kèm nút "Thử lại" mà không làm crash ứng dụng.
 
+
