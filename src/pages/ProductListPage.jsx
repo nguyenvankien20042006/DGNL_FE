@@ -22,6 +22,9 @@ export default function ProductListPage() {
     limit,
   });
 
+  // Tính toán số trang (Mục 4.3.2)
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
   // State quản lý Modal thêm / sửa
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -50,6 +53,13 @@ export default function ProductListPage() {
     setFilterCategory('');
     setFilterStatus('');
     setPage(1);
+  }
+
+  // Chuyển trang (Mục 4.3.2)
+  function handlePageChange(newPage) {
+    if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
+      setPage(newPage);
+    }
   }
 
   function handleOpenCreate() {
@@ -86,6 +96,16 @@ export default function ProductListPage() {
   }
 
   const hasActiveFilters = Boolean(filterQuery || filterCategory || filterStatus);
+
+  // Xác định khoảng hiển thị số sản phẩm hiện tại
+  const startItem = total === 0 ? 0 : (page - 1) * limit + 1;
+  const endItem = Math.min(page * limit, total);
+
+  // Sinh danh sách các nút phân trang
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i += 1) {
+    pageNumbers.push(i);
+  }
 
   return (
     <section className="page-container">
@@ -171,6 +191,44 @@ export default function ProductListPage() {
         onEdit={handleOpenEdit}
         onDelete={handleDelete}
       />
+
+      {/* Thanh phân trang (Mục 4.3.2) */}
+      <div className="pagination-bar">
+        <div className="pagination-info">
+          Hiển thị <strong>{startItem}</strong> - <strong>{endItem}</strong> trên tổng số <strong>{total}</strong> sản phẩm
+        </div>
+
+        <div className="pagination-controls">
+          <button
+            type="button"
+            className="pagination-btn pagination-nav"
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page <= 1}
+          >
+            &laquo; Trước
+          </button>
+
+          {pageNumbers.map((p) => (
+            <button
+              key={p}
+              type="button"
+              className={`pagination-btn pagination-num ${p === page ? 'pagination-active' : ''}`}
+              onClick={() => handlePageChange(p)}
+            >
+              {p}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            className="pagination-btn pagination-nav"
+            onClick={() => handlePageChange(page + 1)}
+            disabled={page >= totalPages}
+          >
+            Sau &raquo;
+          </button>
+        </div>
+      </div>
 
       {/* Modal form thêm / sửa */}
       <ProductModal
